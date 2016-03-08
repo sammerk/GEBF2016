@@ -1,0 +1,81 @@
+TITLE:
+MGMLSEM_tp_tr_di_I_si
+DATA:
+FILE = "MLSEM_fin.dat";
+ 
+VARIABLE:
+NAMES = si_01_np si_02_np si_05_np si_07_np si_03_np si_04_np si_06_np di_01_np
+     di_02_np di_03_np di_04_np di_05_np di_06_np di_07_np di_08_np di_09_np
+     di_10_np di_11_np di_12_np di_13_np tp_01_np tp_02_np tp_03_np tp_04_np
+     tp_05_np tp_06_np tr ie tp cl ex ke_01_pc tr_01_pc tr_02_pc tr_03_pc tr_04_pc
+     cl_01_pc cl_02_pc cl_03_pc ie_01_pc ie_02_pc ie_03_pc ie_04_pc ie_05_pc I_exp
+     I_wis IDNUM; 
+ MISSING=.;
+ USEVARIABLES = tp_01_np tp_02_np tp_03_np tp_04_np 
+                tp_05_np tp_06_np 
+                tr_01_pc tr_02_pc tr_03_pc tr_04_pc
+                ke_01_pc 
+                cl_01_pc cl_02_pc cl_03_pc
+                ie_01_pc ie_02_pc ie_03_pc ie_04_pc ie_05_pc 
+                di_01_np di_02_np di_03_np di_04_np di_05_np 
+                di_06_np di_07_np di_08_np di_09_np di_10_np
+                di_11_np di_12_np di_13_np
+                si_01_np si_02_np si_03_np si_04_np si_05_np
+                si_06_np si_07_np
+                I_exp I_wis;
+   
+                 WITHIN =  ke_01_pc 
+                           tr_01_pc tr_02_pc tr_03_pc tr_04_pc
+                           cl_01_pc cl_02_pc cl_03_pc
+                           ie_01_pc ie_02_pc ie_03_pc ie_04_pc ie_05_pc;       
+   
+                 BETWEEN = di_01_np di_02_np di_03_np di_04_np di_05_np 
+                           di_06_np di_07_np di_08_np di_09_np di_10_np
+                           di_11_np di_12_np di_13_np
+                           si_01_np si_02_np si_03_np si_04_np si_05_np
+                           si_06_np si_07_np
+                                  I_exp I_wis;
+   
+                 CLUSTER = IDnum;
+ANALYSIS:
+TYPE = TWOLEVEL;
+MODEL:
+%WITHIN%
+                 TPW BY tp_01_np
+   	                    tp_02_np
+   	                    tp_03_np
+   	                    tp_04_np
+                        tp_05_np
+                        tp_06_np;
+           
+                       CLW BY cl_01_pc cl_02_pc cl_03_pc; 
+   
+                       IEW BY ie_01_pc ie_02_pc ie_03_pc ie_04_pc ie_05_pc; 
+                       IE_05_PC WITH IE_03_PC;
+   
+                       TRW BY tr_01_pc tr_02_pc tr_03_pc tr_04_pc;
+                       
+                       TPW           ON    KE_01_pc CLW IEW TRW;
+                       TRW CLW IEW   ON    KE_01_pc;
+
+                       TRW           WITH  IEW CLW;
+                       IEW           WITH  CLW;
+                       %BETWEEN%
+                       TPB BY tp_01_np
+   	                          tp_02_np
+   	                          tp_03_np
+   	                          tp_04_np
+                              tp_05_np
+                              tp_06_np;
+   
+                       DI BY di_01_np di_02_np di_03_np di_04_np di_05_np 
+                             di_06_np di_07_np di_08_np di_09_np di_10_np
+                             di_11_np di_12_np di_13_np;
+   
+                       SI BY si_01_np si_02_np si_03_np si_04_np si_05_np
+                             si_05_np si_06_np si_07_np;
+   
+   
+                       TPB ON DI SI I_exp I_wis;
+OUTPUT:
+Standardized;
